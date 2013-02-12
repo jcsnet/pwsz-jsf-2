@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="resources/templates/masterTemplate.xhtml">
+
+    <ui:param name="pageTitle" value="JUG Tarnow"/>
+
+
+    <ui:define name="content">
+
+        <f:view locale="#{localeSelector.selectedLocale}"/>
+
+        <h:head>
+            <title>JUG Tarnow</title>
+        </h:head>
+
+            <h:form>
+                <h:selectOneListbox size="1" value="#{localeSelector.selectedLocale}" onchange="this.form.submit()"
+                                    converter="#{localeSelector.converter}">
+                    <f:selectItems value="#{localeSelector.availableLocales}" var="locale" itemValue="#{locale}"
+                                   itemLabel="#{locale.displayName}"/>
+                </h:selectOneListbox>
+            </h:form>
+
+            <h:form>
+
+                <h:outputText value="#{messages['User.TypeName']}" for="name"/>
+                <h:inputText value="#{userList.selectedUser.name}" id="name"
+                             validatorMessage="Name is required value">
+                    <f:validateRequired/>
+                </h:inputText>
+                <br/>
+                <h:outputText value="#{messages['User.TypeSurname']}" for="surname"/>
+                <h:inputText value="#{userList.selectedUser.surname}" id="surname"
+                             validatorMessage="Surname is required value">
+                    <f:validateRequired/>
+                </h:inputText>
+                <br/>
+
+                <h:outputText value="#{messages['User.TypeYear']}" for="birthYear"/>
+                <h:inputText value="#{userList.selectedUser.dateBirth}" id="birthYear"
+                             validatorMessage="Minimum avaiable year is 1900">
+                    <f:validateLongRange minimum="1900"/>
+                </h:inputText>
+
+                <br/><br/>
+                <h:commandButton value="#{messages['User.AddUser']}" action="#{userList.addUser}">
+
+                </h:commandButton>
+            </h:form>
+            <h:form>
+                <h1>#{messages['User.UsersList']}</h1>
+                <h:dataTable value="#{userList.userList}" var="user">
+
+                    <h:column>
+                        <f:facet name="header">Id</f:facet>
+                        #{user.id}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">#{messages['User.Name']}</f:facet>
+                        #{user.name}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">#{messages['User.Surname']}</f:facet>
+                        #{user.surname}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">#{messages['User.DateBirth']}</f:facet>
+                        #{user.dateBirth}
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">#{messages['User.Delete']}</f:facet>
+
+                        <h:commandButton value="#{messages['User.Delete']}" action="#{userList.deleteUser(user)}">
+                            <f:ajax render="@form"/>
+                        </h:commandButton>
+                    </h:column>
+
+                </h:dataTable>
+            </h:form>
+
+    </ui:define>
+
+</ui:composition>
